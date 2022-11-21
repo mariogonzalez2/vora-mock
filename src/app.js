@@ -47,18 +47,20 @@ app.get('/', (req, res) => {
 app.get('/vora/calls/makeCallTerminal', async(req, res) => {
 
     let callId = Math.floor(
-        Math.random() * (1000)
+        Math.random() * (10000000000000)
       )
 
     console.log("llamando...")
 
-    // // step1 : call intiated
-    // let objectCallInitiated= {
-    //     "interestedParty": "911292350",
-    //     "callContextId": `vm-bar-onenet-ims01-${callId}`,
-    //     "eventName": "callInitiated"
-    // }
-    // sendToAll(JSON.stringify(objectCallInitiated))
+    // step1 : call intiated
+    let objectCallInitiated= {
+        "interestedParty": "911292350",
+        "callContextId": `vm-bar-onenet-ims01-${callId}`,
+        "eventName": "callInitiated"
+    }
+    sendToAll(JSON.stringify(objectCallInitiated))
+    console.log("initiating...")
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     // step2 : call ringing
     let objectCallRinging= {
@@ -92,19 +94,45 @@ app.get('/vora/calls/makeCallTerminal', async(req, res) => {
     res.status(200).send('call generated...')
 })
 
-// make call from app
-app.get('/', (req, res) => {
-    res.sendFile('/home.html', { root: __dirname })
-})
+// make call from terminal
+app.get('/vora/calls/makeCallOneNet', async(req, res) => {
 
-// Release call
-app.get('/', (req, res) => {
-    res.sendFile('/home.html', { root: __dirname })
-})
+    let callId = Math.floor(
+        Math.random() * (1000)
+      )
 
-// answer call
-app.get('/', (req, res) => {
-    res.sendFile('/home.html', { root: __dirname })
+    console.log("llamando...")
+
+    // step2 : call ringing
+    let objectCallRinging= {
+        "interestedParty": "911292350",
+        "callContextId": `vm-bar-onenet-ims01-${callId}`,
+        "eventName": "callRinging"
+    }
+    sendToAll(JSON.stringify(objectCallRinging))
+    console.log("ringing...")
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // step3 : call Answered
+    let objectCallAnswered= {
+        "interestedParty": "911292350",
+        "callContextId": `vm-bar-onenet-ims01-${callId}`,
+        "eventName": "callAnswered"
+    }
+    sendToAll(JSON.stringify(objectCallAnswered))
+    console.log("contestado...")
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    // step4 : call Released
+    let objectCallReleased= {
+        "interestedParty": "911292350",
+        "callContextId": `vm-bar-onenet-ims01-${callId}`,
+        "eventName": "callReleased",
+        "reason": "callReleased"
+    }
+    sendToAll(JSON.stringify(objectCallReleased))
+    console.log("colgando...")
+    res.status(200).send('call generated...')
 })
 
 
