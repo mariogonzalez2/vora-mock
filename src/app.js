@@ -3,7 +3,7 @@ const express = require('express');
 const app = express()
   
 
-server= app.listen(3331, () => console.log(`Listening on ${3331}`));
+server= app.listen(3341, () => console.log(`Listening on ${3331}`));
 
 const { Server } = require('ws');
 
@@ -23,13 +23,15 @@ ws_server.on('connection', (ws) => {
     })
 });
 
-// setInterval(() => {
-//     sendToAll(new Date().toTimeString());
-// },1000)
+setInterval(() => {
+    sendToAll(new Date().toTimeString());
+},10000)
 
 function sendToAll(message) {
+    console.log("attemp to send mesage: "+message)
     ws_server.clients.forEach((client) => {
-        client.send(message);
+        client.send(JSON.stringify({"message":message}));
+        console.log("message sent! ")
     });
 }
 
